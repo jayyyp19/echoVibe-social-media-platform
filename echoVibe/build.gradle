@@ -1,0 +1,92 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.7.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+	id 'groovy'
+
+}
+
+compileJava {
+	options.compilerArgs << '-Amapstruct.defaultComponentModel=spring'
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "$buildDir/generated-source"
+		}
+	}
+}
+
+sourceSets {
+	main {
+		groovy {
+			srcDirs = ['src/groovy']
+		}
+	}
+}
+
+sourceSets {
+	test {
+		groovy {
+			srcDirs = ['test/groovy']
+		}
+	}
+}
+println 'Configuring project'
+group = 'com.ossbss.manager'
+version = '2.0.47'
+println 'Version is ' + version
+
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+configurations.all {
+//    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+dependencies {
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.0' // Use the latest version available
+	implementation 'org.apache.logging.log4j:log4j-api:2.17.0' // Use the latest version available
+	implementation 'org.apache.logging.log4j:log4j-core:2.17.0' // Use the latest version available
+
+
+
+
+
+
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+	annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.2.0.Final'
+
+
+	//Spring
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+
+	//Lombok
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+	//Swagger
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+}
+
+
+task fatJar(type: Jar) {
+	manifest {
+		attributes 'GUIManager': 'Gradle Jar GUIManager',
+				'Implementation-Version': version,
+				'Main-Class': 'com.alticon.etpl.GUIManagerApplication'
+	}
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+

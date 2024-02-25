@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: socialmedia
+server:
+  port: 8080
+#http://localhost:9090/swagger-ui.html#/
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
